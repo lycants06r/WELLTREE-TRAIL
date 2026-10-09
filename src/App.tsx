@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './hooks/useAuth';
 import { DashboardLayout } from './components/layout/DashboardLayout';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 
@@ -103,53 +104,65 @@ export function App() {
                 />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-                {/* Authenticated Routes wrapped in DashboardLayout */}
+                {/* Authenticated Routes wrapped in ProtectedRoute & DashboardLayout */}
                 <Route
                   path="/dashboard"
                   element={
-                    <DashboardLayout>
-                      <DashboardPage />
-                    </DashboardLayout>
+                    <ProtectedRoute>
+                      <DashboardLayout>
+                        <DashboardPage />
+                      </DashboardLayout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/families"
                   element={
-                    <DashboardLayout>
-                      <FamiliesPage />
-                    </DashboardLayout>
+                    <ProtectedRoute>
+                      <DashboardLayout>
+                        <FamiliesPage />
+                      </DashboardLayout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/families/create"
                   element={
-                    <DashboardLayout>
-                      <CreateFamilyPage />
-                    </DashboardLayout>
+                    <ProtectedRoute>
+                      <DashboardLayout>
+                        <CreateFamilyPage />
+                      </DashboardLayout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/families/:id"
                   element={
-                    <DashboardLayout>
-                      <FamilyDetailPage />
-                    </DashboardLayout>
+                    <ProtectedRoute>
+                      <DashboardLayout>
+                        <FamilyDetailPage />
+                      </DashboardLayout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/consents"
                   element={
-                    <DashboardLayout>
-                      <ConsentsPage />
-                    </DashboardLayout>
+                    <ProtectedRoute>
+                      <DashboardLayout>
+                        <ConsentsPage />
+                      </DashboardLayout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/profile"
                   element={
-                    <DashboardLayout>
-                      <ProfilePage />
-                    </DashboardLayout>
+                    <ProtectedRoute>
+                      <DashboardLayout>
+                        <ProfilePage />
+                      </DashboardLayout>
+                    </ProtectedRoute>
                   }
                 />
 
