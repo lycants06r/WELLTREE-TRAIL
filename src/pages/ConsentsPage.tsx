@@ -280,41 +280,65 @@ export const ConsentsPage: React.FC = () => {
         </Card>
       </div>
 
-      {/* 2. TABS */}
-      <div className="border-b border-slate-200">
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => setActiveTab('granted_by_me')}
-            className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold border-b-2 transition-all ${
+      {/* 2. TABS WITH ACTIVE INDICATOR */}
+      <div className="bg-slate-100/90 p-1.5 rounded-xl inline-flex flex-wrap gap-1.5 border border-slate-200/80 shadow-2xs">
+        <button
+          type="button"
+          onClick={() => setActiveTab('granted_by_me')}
+          className={`relative flex items-center gap-2.5 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
+            activeTab === 'granted_by_me'
+              ? 'bg-white text-primary shadow-xs ring-1 ring-slate-200/60'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-white/40'
+          }`}
+        >
+          <Shield
+            className={`w-4 h-4 ${
+              activeTab === 'granted_by_me' ? 'text-primary' : 'text-slate-400'
+            }`}
+          />
+          <span>Consents I Granted</span>
+          <span
+            className={`ml-1 text-xs px-2 py-0.5 rounded-full font-bold transition-colors ${
               activeTab === 'granted_by_me'
-                ? 'border-primary text-primary bg-teal-50/50 rounded-t-lg'
-                : 'border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50'
+                ? 'bg-teal-50 text-primary border border-teal-200'
+                : 'bg-slate-200/70 text-slate-600'
             }`}
           >
-            <Shield className="w-4 h-4" />
-            <span>Consents I Granted</span>
-            <span className="ml-1 text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium">
-              {consents ? consents.filter((c) => c.granter_id === user?.id).length : 0}
-            </span>
-          </button>
+            {consents ? consents.filter((c) => c.granter_id === user?.id).length : 0}
+          </span>
+          {activeTab === 'granted_by_me' && (
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+          )}
+        </button>
 
-          <button
-            type="button"
-            onClick={() => setActiveTab('granted_to_me')}
-            className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold border-b-2 transition-all ${
+        <button
+          type="button"
+          onClick={() => setActiveTab('granted_to_me')}
+          className={`relative flex items-center gap-2.5 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
+            activeTab === 'granted_to_me'
+              ? 'bg-white text-primary shadow-xs ring-1 ring-slate-200/60'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-white/40'
+          }`}
+        >
+          <ArrowRightLeft
+            className={`w-4 h-4 ${
+              activeTab === 'granted_to_me' ? 'text-primary' : 'text-slate-400'
+            }`}
+          />
+          <span>Access Granted to Me</span>
+          <span
+            className={`ml-1 text-xs px-2 py-0.5 rounded-full font-bold transition-colors ${
               activeTab === 'granted_to_me'
-                ? 'border-primary text-primary bg-teal-50/50 rounded-t-lg'
-                : 'border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50'
+                ? 'bg-teal-50 text-primary border border-teal-200'
+                : 'bg-slate-200/70 text-slate-600'
             }`}
           >
-            <ArrowRightLeft className="w-4 h-4" />
-            <span>Access Granted to Me</span>
-            <span className="ml-1 text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium">
-              {consents ? consents.filter((c) => c.grantee_id === user?.id).length : 0}
-            </span>
-          </button>
-        </div>
+            {consents ? consents.filter((c) => c.grantee_id === user?.id).length : 0}
+          </span>
+          {activeTab === 'granted_to_me' && (
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+          )}
+        </button>
       </div>
 
       {/* 3. CONSENT LIST */}
