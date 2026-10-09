@@ -5,6 +5,7 @@ import {
   createConsent,
   updateConsent,
 } from '../lib/services/consentService';
+import { useAuth } from './useAuth';
 import type {
   Consent,
   ConsentCreateInput,
@@ -12,9 +13,13 @@ import type {
 } from '../types';
 
 export const useConsents = () => {
+  const { isAuthenticated } = useAuth();
+
   return useQuery<Consent[], Error>({
     queryKey: ['consents'],
     queryFn: getConsents,
+    enabled: isAuthenticated,
+    retry: false,
   });
 };
 

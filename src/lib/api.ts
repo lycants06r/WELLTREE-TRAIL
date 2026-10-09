@@ -14,21 +14,30 @@ const api = axios.create({
 // Request Interceptor: Attach Supabase JWT bearer token if available
 api.interceptors.request.use(
   async (config) => {
+    // Allow public health check endpoints without bearer token
+    if (config.url === '/health' || config.url?.endsWith('/health')) {
+      return config;
+    }
+
     try {
       const { data } = await supabase.auth.getSession();
       const token = data.session?.access_token;
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
+      } else {
+        // Cancel request client-side instead of triggering 401 error logs on backend
+        return Promise.reject(new Error('Unauthenticated: No active session token found.'));
       }
     } catch (error) {
       console.warn('[API] Failed to retrieve session for request authentication:', error);
+      return Promise.reject(error);
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Format error message from backend & handle 401
+// Response Interceptor: Format error message from backend
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<{ detail?: string | Array<{ msg?: string }> }>) => {
@@ -46,11 +55,9 @@ api.interceptors.response.use(
         message = error.message;
       }
 
-      // Handle 401 Unauthorized
+      // Handle 401 Unauthorized logging without destructively wiping session
       if (status === 401) {
-        console.warn('[API] 401 Unauthorized encountered. Session may be expired.');
-        // Optionally sign out invalid/expired session
-        await supabase.auth.signOut().catch(() => {});
+        console.warn('[API] 401 Unauthorized encountered. Verify session or backend SUPABASE_JWT_SECRET.');
       }
 
       // Attach normalized human-readable message

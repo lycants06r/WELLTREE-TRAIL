@@ -7,6 +7,7 @@ import {
   addFamilyMember,
   removeFamilyMember,
 } from '../lib/services/familyService';
+import { useAuth } from './useAuth';
 import type {
   Family,
   FamilyCreateInput,
@@ -15,17 +16,24 @@ import type {
 } from '../types';
 
 export const useFamilies = () => {
+  const { isAuthenticated } = useAuth();
+
   return useQuery<Family[], Error>({
     queryKey: ['families'],
     queryFn: getFamilies,
+    enabled: isAuthenticated,
+    retry: false,
   });
 };
 
 export const useFamily = (familyId: string) => {
+  const { isAuthenticated } = useAuth();
+
   return useQuery<Family, Error>({
     queryKey: ['families', familyId],
     queryFn: () => getFamily(familyId),
-    enabled: Boolean(familyId),
+    enabled: isAuthenticated && Boolean(familyId),
+    retry: false,
   });
 };
 
