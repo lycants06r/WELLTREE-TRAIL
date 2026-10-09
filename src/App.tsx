@@ -6,6 +6,8 @@ import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './hooks/useAuth';
 import { DashboardLayout } from './components/layout/DashboardLayout';
 
+import { ErrorBoundary } from './components/ui/ErrorBoundary';
+
 // Pages
 import {
   LandingPage,
@@ -50,7 +52,8 @@ const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
 export function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BrowserRouter>
           <Toaster
@@ -157,6 +160,7 @@ export function App() {
         </BrowserRouter>
       </AuthProvider>
     </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 

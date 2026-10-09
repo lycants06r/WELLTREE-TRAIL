@@ -44,9 +44,17 @@ export const useUpdateConsent = () => {
   return useMutation<Consent, Error, UpdateConsentVariables>({
     mutationFn: ({ consentId, data }: UpdateConsentVariables) =>
       updateConsent(consentId, data),
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['consents'] });
-      toast.success('Consent updated successfully!');
+      if (variables.data.status === 'ACTIVE') {
+        toast.success('Consent accepted successfully!');
+      } else if (variables.data.status === 'DENIED') {
+        toast.success('Consent request denied.');
+      } else if (variables.data.status === 'REVOKED') {
+        toast.success('Consent revoked successfully.');
+      } else {
+        toast.success('Consent updated successfully!');
+      }
     },
     onError: (error) => {
       toast.error(error.message || 'Failed to update consent status.');

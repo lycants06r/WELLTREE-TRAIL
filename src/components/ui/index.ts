@@ -9,3 +9,4 @@ export * from './EmptyState';
 export * from './ConfirmDialog';
 export * from './Avatar';
 export * from './Tooltip';
+export * from './ErrorBoundary';
