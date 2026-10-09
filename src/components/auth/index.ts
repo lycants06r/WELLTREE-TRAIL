@@ -1,2 +1,1 @@
-// Auth components export
-export {};
+export * from './ProtectedRoute';
