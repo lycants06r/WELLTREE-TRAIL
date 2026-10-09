@@ -16,11 +16,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     const renderIcon = () => {
       if (!Icon) return null;
-      if (typeof Icon === 'function') {
-        const IconComponent = Icon as LucideIcon;
-        return <IconComponent className="w-4 h-4 text-slate-400 pointer-events-none" />;
+      if (React.isValidElement(Icon)) {
+        return <span className="text-slate-400 pointer-events-none">{Icon}</span>;
       }
-      return <span className="text-slate-400 pointer-events-none">{Icon}</span>;
+      const IconComponent = Icon as React.ComponentType<{ className?: string }>;
+      return <IconComponent className="w-4 h-4 text-slate-400 pointer-events-none" />;
     };
 
     return (

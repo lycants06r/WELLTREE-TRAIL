@@ -58,11 +58,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         );
       }
       if (!Icon) return null;
-      if (typeof Icon === 'function') {
-        const IconComponent = Icon as LucideIcon;
-        return <IconComponent className={size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4'} />;
+      if (React.isValidElement(Icon)) {
+        return Icon;
       }
-      return <>{Icon}</>;
+      const IconComponent = Icon as React.ComponentType<{ className?: string }>;
+      return <IconComponent className={size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4'} />;
     };
 
     return (
