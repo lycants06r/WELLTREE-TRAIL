@@ -40,3 +40,11 @@ export const removeFamilyMember = async (
 ): Promise<void> => {
   await api.delete(`/families/${familyId}/members/${userId}`);
 };
+
+export const familyService = {
+  getFamilies,
+  getFamily,
+  createFamily,
+  addFamilyMember,
+  removeFamilyMember,
+};
