@@ -1,11 +1,10 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation, Outlet } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './hooks/useAuth';
 import { DashboardLayout } from './components/layout/DashboardLayout';
-import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 
@@ -33,20 +32,22 @@ const queryClient = new QueryClient({
 });
 
 /**
- * Public route wrapper that redirects to /dashboard if already authenticated
+ * Public route wrapper that redirects to intended destination or /dashboard if already authenticated
  */
-const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const PublicOnlyRoute: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
 
   if (isLoading) {
     return null;
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/dashboard';
+    return <Navigate to={from} replace />;
   }
 
-  return <>{children}</>;
+  return children ? <>{children}</> : <Outlet />;
 };
 
 export function App() {
@@ -104,67 +105,15 @@ export function App() {
                 />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-                {/* Authenticated Routes wrapped in ProtectedRoute & DashboardLayout */}
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <DashboardPage />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/families"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <FamiliesPage />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/families/create"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <CreateFamilyPage />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/families/:id"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <FamilyDetailPage />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/consents"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <ConsentsPage />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/profile"
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout>
-                        <ProfilePage />
-                      </DashboardLayout>
-                    </ProtectedRoute>
-                  }
-                />
+                {/* Authenticated Routes wrapped in persistent DashboardLayout */}
+                <Route element={<DashboardLayout />}>
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/families" element={<FamiliesPage />} />
+                  <Route path="/families/create" element={<CreateFamilyPage />} />
+                  <Route path="/families/:id" element={<FamilyDetailPage />} />
+                  <Route path="/consents" element={<ConsentsPage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                </Route>
 
                 {/* 404 Catch-All */}
                 <Route path="*" element={<NotFoundPage />} />

@@ -115,12 +115,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     password: string,
     fullName: string
   ): Promise<AuthResponse> => {
+    const cleanEmail = email.trim().toLowerCase();
     return await supabase.auth.signUp({
-      email,
+      email: cleanEmail,
       password,
       options: {
         data: {
-          full_name: fullName,
+          full_name: fullName.trim(),
         },
       },
     });
@@ -130,15 +131,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     email: string,
     password: string
   ): Promise<AuthTokenResponsePassword> => {
+    const cleanEmail = email.trim().toLowerCase();
     const result = await supabase.auth.signInWithPassword({
-      email,
+      email: cleanEmail,
       password,
     });
 
     if (result.data.session) {
       setSession(result.data.session);
       setUser(result.data.user);
-      await fetchProfile();
+      fetchProfile().catch((err) => console.warn('[Auth] Non-blocking profile fetch error:', err));
     }
 
     return result;

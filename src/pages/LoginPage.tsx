@@ -34,9 +34,9 @@ export const LoginPage: React.FC = () => {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      navigate('/dashboard', { replace: true });
+      navigate(from, { replace: true });
     }
-  }, [isAuthenticated, isLoading, navigate]);
+  }, [isAuthenticated, isLoading, navigate, from]);
 
   const {
     register,
