@@ -41,10 +41,10 @@ Before starting, ensure you have:
 
 ## Setup Instructions
 
-1. **Clone the repository**:
+1. **Clone the repository and navigate to frontend**:
    ```bash
    git clone https://github.com/lycants06r/WELLTREE-TRAIL.git
-   cd WELLTREE-TRAIL
+   cd WELLTREE-TRAIL/frontend
    ```
 
 2. **Configure Environment Variables**:
@@ -88,7 +88,7 @@ Before starting, ensure you have:
 ## Project Structure
 
 ```text
-src/
+frontend/src/
 ├── components/
 │   ├── auth/            # ProtectedRoute guard and authentication components
 │   ├── layout/          # Navbar, DashboardLayout, AuthLayout, PageHeader, Footer
